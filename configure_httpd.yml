@@ -1,0 +1,47 @@
+---
+- name: Setup httpd services
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: install httpd using yum
+      yum:
+        name: httpd
+        state: present
+      become: true
+      become_user: root
+
+    - name: add virtual directory
+      blockinfile:
+        path: /etc/httpd/conf/httpd.conf
+        insertafter: EOF
+        block: |
+           <Directory "C:/www/phpMyAdmin">
+            Options None
+            AllowOverride None
+            order deny,allow
+            deny from all
+            allow from 127.0.0.1
+            </Directory>
+        owner: apache
+        group: apache
+      become: true
+      become_user: root
+      notify: httpd restart
+
+    - name: add index.html file
+      copy:
+        dest: /var/www/html/index.html
+        content: "ansible managed httpd service"
+        owner: apache
+        group: apache
+      become: true
+      become_user: root
+
+  handlers:
+    - name: httpd restart
+      systemd:
+        name: httpd
+        state: restarted
+        enabled: true
+      become: true
+      become_user: root

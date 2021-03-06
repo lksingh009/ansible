@@ -1,0 +1,18 @@
+---
+## this is an example how we can add multiple lines
+- name: OS-Setup | Setup ssh service
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Allow ec2-user user for ssh | /etc/ssh/sshd.conf
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        mode: 0755
+        line: "AllowUsers = {{ item }}"
+      become: true
+      become_user: root
+      with_items:
+        - root
+        - ec2-user
+        - support

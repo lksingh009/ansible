@@ -1,0 +1,12 @@
+---
+- name: OS-Setup | restart sshd service
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: restart systemd service | sshd
+      systemd:
+        name: sshd
+        state: restarted
+        enabled: true
+      become: true
+      become_user: root

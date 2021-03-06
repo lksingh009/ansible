@@ -1,0 +1,11 @@
+---
+- name: OS-Setup | setup httpd service
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: install httpd using yum
+      yum:
+        name: httpd
+        state: present
+      become: true
+      become_user: root

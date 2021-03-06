@@ -1,0 +1,13 @@
+---
+- name: OS-Setup | Setup ssh service
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Allow ec2-user user for ssh | /etc/ssh/sshd.conf
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        mode: 0755
+        line: "AllowUsers = ec2-user"
+      become: true
+      become_user: root
